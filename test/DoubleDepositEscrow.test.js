@@ -148,6 +148,34 @@ describe("DoubleDepositEscrow", function () {
         ).to.be.revertedWith("Transaction has already been approved.");
     });
 
+    it("Should revert if payment to seller fails", async () => {
+        const BadSeller = await ethers.getContractFactory("RevertingSellerAlwaysFail");
+        const badSeller = await BadSeller.deploy();
+        await badSeller.deployed();
+
+        const Escrow = await ethers.getContractFactory("DoubleDepositEscrow");
+        const escrowBad = await Escrow.deploy(
+            buyer.address,
+            badSeller.address,
+            paymentAmount,
+            depositAmount
+        );
+        await escrowBad.deployed();
+        await badSeller.setEscrow(escrowBad.address);
+
+        // normal buyer deposit
+        await escrowBad.connect(buyer).buyer_deposit({ value: depositAmount });
+
+        // seller deposit through forwarder
+        await badSeller.depositAsSeller({ value: depositAmount });
+
+        // first transfer should fail → hit "Payment to seller failed."
+        await expect(
+            escrowBad.connect(buyer).approve()
+        ).to.be.revertedWith("Payment to seller failed.");
+    });
+
+
     //
     // External-call failure branches
     //

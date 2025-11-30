@@ -152,6 +152,44 @@
       "artifacts": [
         "RevertingSeller"
       ]
+    },
+    "/Users/felix.nyabwari/School - MDX/Dissertation/DTechnical/escrow/contracts/RevertingSellerAlwaysFail.sol": {
+      "lastModificationDate": 1764490528441,
+      "contentHash": "f79abcb430e4fd9d6df4dd29552743e5",
+      "sourceName": "contracts/RevertingSellerAlwaysFail.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": false
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "RevertingSellerAlwaysFail"
+      ]
     }
   }
 }
