@@ -9,3 +9,12 @@
 - npx hardhat compile // Compile
 - npx hardhat test // test
 - npx hardhat coverage // coverage
+
+## Running python commands on mac
+
+Use python3 command or run the commands below to create an alias
+
+```bash
+echo "alias python=/usr/bin/python3" >> ~/.zshrc
+source ~/.zshrc
+```
