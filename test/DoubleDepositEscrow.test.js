@@ -52,7 +52,9 @@ describe("DoubleDepositEscrow", function () {
     it("Should revert if buyer deposits wrong amount", async () => {
         await expect(
             escrow.connect(buyer).buyer_deposit({ value: 1 })
-        ).to.be.revertedWith("Deposit amount should be equal to the deposit amount specified.");
+        ).to.be.revertedWith(
+            "Deposit amount should be equal to the deposit amount specified."
+        );
     });
 
     it("Should revert if buyer deposits twice", async () => {
@@ -77,7 +79,9 @@ describe("DoubleDepositEscrow", function () {
     it("Should revert if seller deposits wrong amount", async () => {
         await expect(
             escrow.connect(seller).seller_deposit({ value: 1 })
-        ).to.be.revertedWith("Deposit amount should be equal to the deposit amount specified.");
+        ).to.be.revertedWith(
+            "Deposit amount should be equal to the deposit amount specified."
+        );
     });
 
     it("Should revert if seller deposits twice", async () => {
@@ -112,14 +116,13 @@ describe("DoubleDepositEscrow", function () {
         await escrow.connect(buyer).buyer_deposit({ value: depositAmount });
         await escrow.connect(seller).seller_deposit({ value: depositAmount });
 
-        // Use Waffle's changeEtherBalances to force coverage to hit low-level send()
         await expect(() =>
             escrow.connect(buyer).approve()
         ).to.changeEtherBalances(
             [seller, buyer],
             [
-                paymentAmount.add(depositAmount),      // seller receives payment + deposit
-                depositAmount.sub(paymentAmount)       // buyer receives residual
+                paymentAmount.add(depositAmount),      // seller: payment + deposit
+                depositAmount.sub(paymentAmount)       // buyer: residual
             ]
         );
 
@@ -140,10 +143,14 @@ describe("DoubleDepositEscrow", function () {
 
         await escrow.connect(buyer).approve();
 
-        return expect(
+        await expect(
             escrow.connect(buyer).approve()
         ).to.be.revertedWith("Transaction has already been approved.");
     });
+
+    //
+    // External-call failure branches
+    //
 
     it("Should revert if deposit refund to seller fails", async () => {
         const RevertingSeller = await ethers.getContractFactory("RevertingSeller");
@@ -160,20 +167,17 @@ describe("DoubleDepositEscrow", function () {
         await escrowBad.deployed();
         await badSeller.setEscrow(escrowBad.address);
 
-        // Normal buyer deposit
+        // buyer & seller deposits
         await escrowBad.connect(buyer).buyer_deposit({ value: depositAmount });
-
-        // Seller deposit via the proxy
         await badSeller.depositAsSeller({ value: depositAmount });
 
-        // First payment succeeds, second fails
+        // First payment (paymentAmount) succeeds,
+        // second transfer (depositAmount) to badSeller reverts.
         await expect(
             escrowBad.connect(buyer).approve()
         ).to.be.revertedWith("Deposit refund to seller failed.");
     });
 
-
-    
     it("Should revert if residual refund to buyer fails", async () => {
         const RevertingBuyer = await ethers.getContractFactory("RevertingBuyer");
         const badBuyer = await RevertingBuyer.deploy();
@@ -181,7 +185,7 @@ describe("DoubleDepositEscrow", function () {
 
         const Escrow = await ethers.getContractFactory("DoubleDepositEscrow");
         const escrowBad = await Escrow.deploy(
-            badBuyer.address,    // malicious buyer
+            badBuyer.address,     // buyer is the reverting contract
             seller.address,
             paymentAmount,
             depositAmount
@@ -189,21 +193,16 @@ describe("DoubleDepositEscrow", function () {
         await escrowBad.deployed();
         await badBuyer.setEscrow(escrowBad.address);
 
-        // deposit through forwarder
+        // Buyer deposit via forwarder
         await badBuyer.depositAsBuyer({ value: depositAmount });
 
+        // Seller deposit normally
         await escrowBad.connect(seller).seller_deposit({ value: depositAmount });
 
-        // approve through DELEGATECALL
+        // Approve via forwarder – internal refund to buyer will hit
+        // RevertingBuyer.receive() and revert
         await expect(
             badBuyer.approveAsBuyer()
         ).to.be.revertedWith("Residual deposit refund to buyer failed.");
     });
-
-
-
-
-
-
-
 });

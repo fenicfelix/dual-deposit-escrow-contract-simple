@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
 contract RevertingSeller {
@@ -9,7 +8,6 @@ contract RevertingSeller {
         escrow = _escrow;
     }
 
-    // Forward seller_deposit()
     function depositAsSeller() external payable {
         (bool ok, ) = escrow.call{value: msg.value}(
             abi.encodeWithSignature("seller_deposit()")
@@ -17,13 +15,12 @@ contract RevertingSeller {
         require(ok, "Forwarded seller_deposit failed");
     }
 
-    // First payment succeeds, second payment fails
+    // 1st receive OK, 2nd receive reverts
     receive() external payable {
         receiveCount++;
         if (receiveCount == 1) {
-            // SUCCESS: allow first (paymentAmount)
+            // accept first payment
         } else {
-            // FAIL: reject second (depositAmount)
             revert("Seller reverted intentionally");
         }
     }
