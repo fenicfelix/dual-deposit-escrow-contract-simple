@@ -1,5 +1,16 @@
 ## Key Steps:
 
+### Prerequisites
+
+At the point of development, the tools below and their corresponding versions. were used
+
+- node v24.11.1
+- npm v11.6.2
+- Python v3.9.6
+- hardhat v2.22.6
+
+### Installation
+
 - Install node - Check steps online based on the OS in use
 - npm install --save-dev hardhat@2.22.6 // install hardhat
 - npx hardhat init // Initialize hardhat
