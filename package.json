@@ -1,0 +1,33 @@
+{
+  "name": "escrow",
+  "version": "1.0.0",
+  "description": "This is a simple implementation of a dual-deposit escrow Ethereum smart contract that facilitates a transaction between a buyer and a seller. The contract holds the funds in escrow until the buyer approves the transaction, at which point the funds are released to the seller. It is intended to protect buyers and sellers of any physical or digital good or service from cheating each other.",
+  "main": "hardhat.config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fenicfelix/dual-deposit-escrow-contract-simple.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/fenicfelix/dual-deposit-escrow-contract-simple/issues"
+  },
+  "homepage": "https://github.com/fenicfelix/dual-deposit-escrow-contract-simple#readme",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "chai": "^6.2.1",
+    "ethereum-waffle": "^4.0.10",
+    "ethers": "^5.8.0",
+    "hardhat": "^2.22.6",
+    "solidity-coverage": "^0.8.16"
+  }
+}
