@@ -1,0 +1,29 @@
+{
+  "language": "Solidity",
+  "settings": {
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "metadata"
+        ]
+      }
+    },
+    "optimizer": {
+      "enabled": false
+    }
+  },
+  "sources": {
+    "DoubleDepositEscrow.sol": {
+      "urls": ["contracts/DoubleDepositEscrow.sol"]
+    },
+    "RevertingBuyer.sol": {
+      "urls": ["contracts/RevertingBuyer.sol"]
+    },
+    "RevertingSeller.sol": {
+      "urls": ["contracts/RevertingSeller.sol"]
+    }
+  }
+}

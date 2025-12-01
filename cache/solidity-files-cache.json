@@ -25,9 +25,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -37,44 +34,6 @@
       ],
       "artifacts": [
         "DoubleDepositEscrow"
-      ]
-    },
-    "/Users/felix.nyabwari/School - MDX/Dissertation/DTechnical/escrow/contracts/RevertingReceiver.sol": {
-      "lastModificationDate": 1764488830333,
-      "contentHash": "3a44fa595386206ffcbd2bda616e7919",
-      "sourceName": "contracts/RevertingReceiver.sol",
-      "solcConfig": {
-        "version": "0.8.18",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.18"
-      ],
-      "artifacts": [
-        "RevertingReceiver"
       ]
     },
     "/Users/felix.nyabwari/School - MDX/Dissertation/DTechnical/escrow/contracts/RevertingBuyer.sol": {
@@ -101,9 +60,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -113,6 +69,41 @@
       ],
       "artifacts": [
         "RevertingBuyer"
+      ]
+    },
+    "/Users/felix.nyabwari/School - MDX/Dissertation/DTechnical/escrow/contracts/RevertingReceiver.sol": {
+      "lastModificationDate": 1764488830333,
+      "contentHash": "3a44fa595386206ffcbd2bda616e7919",
+      "sourceName": "contracts/RevertingReceiver.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "RevertingReceiver"
       ]
     },
     "/Users/felix.nyabwari/School - MDX/Dissertation/DTechnical/escrow/contracts/RevertingSeller.sol": {
@@ -139,9 +130,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -177,9 +165,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -189,6 +174,41 @@
       ],
       "artifacts": [
         "RevertingSellerAlwaysFail"
+      ]
+    },
+    "/Users/felix.nyabwari/School - MDX/Dissertation/DTechnical/escrow/contracts/SaferDoubleDepositEscrow.sol": {
+      "lastModificationDate": 1764492626360,
+      "contentHash": "7f8b60ad993c7ed0f8cecbf46ba7e617",
+      "sourceName": "contracts/SaferDoubleDepositEscrow.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "SaferDoubleDepositEscrow"
       ]
     }
   }

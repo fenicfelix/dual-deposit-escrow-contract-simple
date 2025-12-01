@@ -8,6 +8,7 @@ At the point of development, the tools below and their corresponding versions. w
 - npm v11.6.2
 - Python v3.9.6
 - hardhat v2.22.6
+- solidity
 
 ### Installation
 
@@ -29,3 +30,13 @@ Use python3 command or run the commands below to create an alias
 echo "alias python=/usr/bin/python3" >> ~/.zshrc
 source ~/.zshrc
 ```
+
+## Slither
+
+- pipx install slither-analyzer // install
+- slither --version // 0.11.3
+- slither . 
+
+
+- pipx install mythril
+- myth --version 0.24.8
