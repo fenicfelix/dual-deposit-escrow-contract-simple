@@ -40,3 +40,23 @@ source ~/.zshrc
 
 - pipx install mythril
 - myth --version 0.24.8
+
+## solc-verify
+- brew install solc-select
+- solc-select install 0.8.18 // installing the required compiler
+- solc-select use 0.8.18 // activate
+```bash
+Switched global version to 0.8.10
+```
+- solc --version // verifying
+```bash
+solc, the solidity compiler commandline interface
+Version: 0.8.18+commit.87f61d96.Darwin.appleclang
+```
+
+- solc-verify.py contracts/DoubleDepositEscrow.sol --output-dir out_original
+
+docker build -t solc-verify-env .
+docker run -it -v $(pwd):/workspace solc-verify-env bash
+solc --version
+solc-verify.py --help

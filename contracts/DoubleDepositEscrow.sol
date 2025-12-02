@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
 contract DoubleDepositEscrow {
@@ -44,7 +45,7 @@ contract DoubleDepositEscrow {
         /* Updated the below lines of code to use call for testing reasons,
         ** so that we can simulate reverts in the receiving contracts
         */
-       
+
         // require(seller.send(paymentAmount), "Payment to seller failed.");
         // require(seller.send(depositAmount), "Deposit refund to seller failed.");
         // require(buyer.send(depositAmount - paymentAmount), "Residual deposit refund to buyer failed.");
