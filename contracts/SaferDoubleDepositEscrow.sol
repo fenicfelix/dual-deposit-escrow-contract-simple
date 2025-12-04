@@ -1,25 +1,40 @@
-// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
-/// @title Double Deposit Escrow (Safe Version)
-/// @notice Buyer and seller both lock a deposit; buyer later approves and
-///         each party withdraws their due amount using the pull-payment pattern.
 contract SaferDoubleDepositEscrow {
+    /// -----------------------------------------------------------------------
+    /// Immutable Contract Parameters
+    /// -----------------------------------------------------------------------
     address payable public immutable buyer;
     address payable public immutable seller;
 
     uint256 public immutable paymentAmount;
     uint256 public immutable depositAmount;
 
+    /// -----------------------------------------------------------------------
+    /// State Flags
+    /// -----------------------------------------------------------------------
     bool public buyerDeposited;
     bool public sellerDeposited;
     bool public isApproved;
     bool public completed;
 
-    // Pull-payments: amounts each address can withdraw
-    mapping(address => uint256) public pendingWithdrawals;
+    /// -----------------------------------------------------------------------
+    /// Pull-Payment Balances
+    /// -----------------------------------------------------------------------
+    mapping(address => uint256) private credits;
 
-    // Simple reentrancy guard for withdraw()
+    /// -----------------------------------------------------------------------
+    /// Events (recommended for auditability + static analysis clarity)
+    /// -----------------------------------------------------------------------
+    event BuyerDeposited(address indexed buyer, uint256 amount);
+    event SellerDeposited(address indexed seller, uint256 amount);
+    event Approved(address indexed buyer);
+    event Withdrawal(address indexed user, uint256 amount);
+
+    /// -----------------------------------------------------------------------
+    /// Reentrancy Guard (formal-verification–friendly)
+    /// -----------------------------------------------------------------------
     bool private locked;
     modifier nonReentrant() {
         require(!locked, "Reentrancy guard: re-entered");
@@ -28,6 +43,9 @@ contract SaferDoubleDepositEscrow {
         locked = false;
     }
 
+    /// -----------------------------------------------------------------------
+    /// Constructor
+    /// -----------------------------------------------------------------------
     constructor(
         address payable _buyer,
         address payable _seller,
@@ -35,10 +53,7 @@ contract SaferDoubleDepositEscrow {
         uint256 _depositAmount
     ) {
         require(_buyer != address(0) && _seller != address(0), "Zero address");
-        require(
-            _depositAmount > _paymentAmount,
-            "Deposit must be > payment"
-        );
+        require(_depositAmount > _paymentAmount, "Deposit must exceed payment");
 
         buyer = _buyer;
         seller = _seller;
@@ -46,68 +61,77 @@ contract SaferDoubleDepositEscrow {
         depositAmount = _depositAmount;
     }
 
-    /// @notice Buyer deposits the agreed double-deposit amount.
-    function buyer_deposit() external payable {
-        require(msg.sender == buyer, "Only buyer can deposit");
+    /// -----------------------------------------------------------------------
+    /// Buyer Deposit
+    /// -----------------------------------------------------------------------
+    function buyerDeposit() external payable {
+        require(msg.sender == buyer, "Only buyer");
         require(!buyerDeposited, "Buyer already deposited");
-        require(
-            msg.value == depositAmount,
-            "Incorrect buyer deposit amount"
-        );
+        require(msg.value == depositAmount, "Incorrect deposit amount");
 
         buyerDeposited = true;
+        emit BuyerDeposited(msg.sender, msg.value);
     }
 
-    /// @notice Seller deposits the agreed double-deposit amount.
-    function seller_deposit() external payable {
-        require(msg.sender == seller, "Only seller can deposit");
+    /// -----------------------------------------------------------------------
+    /// Seller Deposit
+    /// -----------------------------------------------------------------------
+    function sellerDeposit() external payable {
+        require(msg.sender == seller, "Only seller");
         require(!sellerDeposited, "Seller already deposited");
-        require(
-            msg.value == depositAmount,
-            "Incorrect seller deposit amount"
-        );
+        require(msg.value == depositAmount, "Incorrect deposit amount");
 
         sellerDeposited = true;
+        emit SellerDeposited(msg.sender, msg.value);
     }
 
-    /// @notice Buyer approves release of funds.
-    /// @dev No ETH is sent here; we only update balances for later withdrawal.
+    /// -----------------------------------------------------------------------
+    /// Approve escrow settlement (No external calls: CEI-compatible)
+    /// -----------------------------------------------------------------------
     function approve() external {
         require(msg.sender == buyer, "Only buyer can approve");
         require(!isApproved, "Already approved");
-        require(buyerDeposited, "Buyer has not deposited");
-        require(sellerDeposited, "Seller has not deposited");
-        require(!completed, "Escrow already completed");
+        require(buyerDeposited, "Buyer not deposited");
+        require(sellerDeposited, "Seller not deposited");
+        require(!completed, "Escrow completed");
 
         isApproved = true;
         completed = true;
 
-        // Calculate entitlements:
-        // Seller gets: payment + their own deposit
-        // Buyer gets: remaining part of their deposit
         uint256 sellerPayout = paymentAmount + depositAmount;
         uint256 buyerRefund = depositAmount - paymentAmount;
 
-        // Record withdrawable balances (pull pattern)
-        pendingWithdrawals[seller] += sellerPayout;
-        pendingWithdrawals[buyer] += buyerRefund;
+        // Only internal state updates here
+        credits[seller] += sellerPayout;
+        credits[buyer] += buyerRefund;
+
+        emit Approved(msg.sender);
     }
 
-    /// @notice Withdraw any available balance.
-    /// @dev Uses CEI pattern + nonReentrant guard.
+    /// -----------------------------------------------------------------------
+    /// Withdraw (pull-payment + CEI + reentrancy guard)
+    /// -----------------------------------------------------------------------
     function withdraw() external nonReentrant {
-        uint256 amount = pendingWithdrawals[msg.sender];
+        uint256 amount = credits[msg.sender];
         require(amount > 0, "Nothing to withdraw");
 
-        // Effects: zero balance before external call
-        pendingWithdrawals[msg.sender] = 0;
+        // Effects
+        credits[msg.sender] = 0;
 
-        // Interaction: single, guarded external call
+        // Interaction
         (bool ok, ) = payable(msg.sender).call{value: amount}("");
         require(ok, "Withdraw failed");
+
+        emit Withdrawal(msg.sender, amount);
     }
 
-    /// @notice Helper to expose total funds held by the contract.
+    /// -----------------------------------------------------------------------
+    /// Read-only helpers
+    /// -----------------------------------------------------------------------
+    function pendingWithdrawal(address user) external view returns (uint256) {
+        return credits[user];
+    }
+
     function contractBalance() external view returns (uint256) {
         return address(this).balance;
     }
