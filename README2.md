@@ -13,7 +13,13 @@ At the point of development, the tools below and their corresponding versions. w
 ### Installation
 
 - Install node - Check steps online based on the OS in use
-- npm install --save-dev hardhat@2.22.6 // install hardhat
+- 
+docker run --rm -v $(pwd):/src gogasca/solc-verify solc-verify.py /src/contracts/DoubleDepositEscrow.sol
+
+
+
+
+ // install hardhat
 - npx hardhat init // Initialize hardhat
 - npm install --save-dev @nomicfoundation/hardhat-toolbox
 - npm install --save-dev solidity-coverage // Install solidity coverage plugin
