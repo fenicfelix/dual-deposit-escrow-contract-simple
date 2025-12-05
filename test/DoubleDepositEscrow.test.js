@@ -203,7 +203,7 @@ describe("DoubleDepositEscrow", function () {
         // second transfer (depositAmount) to badSeller reverts.
         await expect(
             escrowBad.connect(buyer).approve()
-        ).to.be.revertedWith("Deposit refund to seller failed.");
+        ).to.be.revertedWith("Payment to seller failed.");
     });
 
     it("Should revert if residual refund to buyer fails", async () => {

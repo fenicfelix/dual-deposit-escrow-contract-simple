@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: BSD-3-Clause
 pragma solidity ^0.8.18;
 
-/// @title Double Deposit Escrow (Safe Version)
-/// @notice Buyer and seller both lock a deposit; buyer later approves and
-///         each party withdraws their due amount using the pull-payment pattern.
 contract SaferDoubleDepositEscrow {
     address payable public immutable buyer;
     address payable public immutable seller;
