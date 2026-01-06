@@ -1,0 +1,48 @@
+name: Smart Contract Verification Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Solidity Compiler
+        run: |
+          sudo add-apt-repository ppa:ethereum/ethereum
+          sudo apt-get update
+          sudo apt-get install solc
+
+      - name: Install Slither
+        run: |
+          pip install slither-analyzer
+
+      - name: Install Mythril
+        run: |
+          pip install mythril
+
+      - name: Compile smart contracts
+        run: |
+          solc --bin --abi contracts/*.sol
+
+      - name: Run Slither analysis
+        run: |
+          slither contracts/*.sol --fail-high
+
+      - name: Run Mythril analysis
+        run: |
+          myth analyze contracts/*.sol --execution-timeout 300 --max-depth 22
