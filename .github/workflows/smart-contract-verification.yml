@@ -38,25 +38,30 @@ jobs:
       - name: Compile DoubleDepositEscrow contract
         run: |
           solc --bin --abi contracts/DoubleDepositEscrow.sol
+          solc --bin --abi contracts/SaferDoubleDepositEscrow.sol
+
+      - name: Run Hardhat tests
+        run: |
+          npx hardhat test
+
+      - name: Run coverage (reporting only)
+        run: |
+          npx hardhat coverage || true
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
 
       - name: Run Slither analysis -> DoubleDepositEscrow
         run: |
           slither contracts/DoubleDepositEscrow.sol --fail-high
-
-      - name: Run Mythril analysis
-        run: |
-          myth analyze contracts/DoubleDepositEscrow.sol --execution-timeout 300 --max-depth 22
-
-      - name: Compile SaferDoubleDepositEscrow contract
-        run: |
-          solc --bin --abi contracts/SaferDoubleDepositEscrow.sol
-
-      - name: Run Slither analysis -> SaferDoubleDepositEscrow
-        run: |
           slither contracts/SaferDoubleDepositEscrow.sol --fail-high
 
       - name: Run Mythril analysis
         run: |
+          myth analyze contracts/DoubleDepositEscrow.sol --execution-timeout 300 --max-depth 22
           myth analyze contracts/SaferDoubleDepositEscrow.sol --execution-timeout 300 --max-depth 22
 
       - name: Build solc-verify Docker image
@@ -65,14 +70,8 @@ jobs:
           cd solc-verify/docker
           docker build -t solc-verify -f docker/Dockerfile-solcverify-local.src .
 
-      - name: Run solc-verify (advisory)
+      - name: Generate legacy Solidity versions
         run: |
-          docker run --rm \
-            --mount type=bind,source=$(pwd)/contracts,target=/host \
-            solc-verify:latest \
-            /host/DoubleDepositEscrow_legacy.sol || true
-
-          docker run --rm \
-            --mount type=bind,source=$(pwd)/contracts,target=/host \
-            solc-verify:latest \
-            /host/SaferDoubleDepositEscrow_legacy.sol || true
+          cd solc-verify/docker
+          ./runsv.sh > ../../legacy/DoubleDepositEscrow_legacy.sol
+          ./runsv.sh > ../../legacy/SaferDoubleDepositEscrow_legacy.sol

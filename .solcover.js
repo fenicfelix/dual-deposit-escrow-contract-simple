@@ -1,7 +1,5 @@
 module.exports = {
   skipFiles: [
-    // "DoubleDepositEscrow.sol",
-    // "SaferDoubleDepositEscrow.sol",
     "RevertingSellerAlwaysFail.sol",
     "RevertingBuyer.sol",
     "RevertingSeller.sol",
