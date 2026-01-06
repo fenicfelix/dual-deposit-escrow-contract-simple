@@ -86,6 +86,7 @@ contract SaferDoubleDepositEscrow {
 
         credits[msg.sender] = 0;
 
+        // slither-disable-next-line low-level-calls
         (bool ok, ) = payable(msg.sender).call{value: amount}("");
         require(ok, "Withdraw failed");
 
