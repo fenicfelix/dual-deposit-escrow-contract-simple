@@ -40,6 +40,16 @@ jobs:
           solc --bin --abi contracts/DoubleDepositEscrow.sol
           solc --bin --abi contracts/SaferDoubleDepositEscrow.sol
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.10.0"
+          cache: "npm"
+
+      - name: Install Node dependencies
+        run: |
+          npm ci
+
       - name: Run Hardhat tests
         run: |
           npx hardhat test
