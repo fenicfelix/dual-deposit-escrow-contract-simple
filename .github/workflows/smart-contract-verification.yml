@@ -35,14 +35,26 @@ jobs:
         run: |
           pip install mythril
 
-      - name: Compile smart contracts
+      - name: Compile DoubleDepositEscrow contract
         run: |
-          solc --bin --abi contracts/*.sol
+          solc --bin --abi contracts/DoubleDepositEscrow.sol
 
-      - name: Run Slither analysis
+      - name: Run Slither analysis -> DoubleDepositEscrow
         run: |
-          slither contracts/*.sol --fail-high
+          slither contracts/DoubleDepositEscrow.sol --fail-high
 
       - name: Run Mythril analysis
         run: |
-          myth analyze contracts/*.sol --execution-timeout 300 --max-depth 22
+          myth analyze contracts/DoubleDepositEscrow.sol --execution-timeout 300 --max-depth 22
+
+      - name: Compile SaferDoubleDepositEscrow contract
+        run: |
+          solc --bin --abi contracts/SaferDoubleDepositEscrow.sol
+
+      - name: Run Slither analysis -> SaferDoubleDepositEscrow
+        run: |
+          slither contracts/SaferDoubleDepositEscrow.sol --fail-high
+
+      - name: Run Mythril analysis
+        run: |
+          myth analyze contracts/SaferDoubleDepositEscrow.sol --execution-timeout 300 --max-depth 22
