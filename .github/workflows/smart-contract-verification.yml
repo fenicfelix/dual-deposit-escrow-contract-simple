@@ -74,14 +74,14 @@ jobs:
           myth analyze contracts/DoubleDepositEscrow.sol --execution-timeout 300 --max-depth 22
           myth analyze contracts/SaferDoubleDepositEscrow.sol --execution-timeout 300 --max-depth 22
 
-      - name: Build solc-verify Docker image
-        run: |
-          git clone https://github.com/SRI-CSL/solidity.git solc-verify
-          cd solc-verify/docker
-          docker build -t solc-verify -f docker/Dockerfile-solcverify-local.src .
+      # - name: Build solc-verify Docker image
+      #   run: |
+      #     git clone https://github.com/SRI-CSL/solidity.git solc-verify
+      #     cd solc-verify/docker
+      #     docker build -t solc-verify -f docker/Dockerfile-solcverify-local.src .
 
-      - name: Generate legacy Solidity versions
-        run: |
-          cd solc-verify/docker
-          ./runsv.sh > ../../legacy/DoubleDepositEscrow_legacy.sol
-          ./runsv.sh > ../../legacy/SaferDoubleDepositEscrow_legacy.sol
+      # - name: Generate legacy Solidity versions
+      #   run: |
+      #     cd solc-verify/docker
+      #     ./runsv.sh > ../../legacy/DoubleDepositEscrow_legacy.sol
+      #     ./runsv.sh > ../../legacy/SaferDoubleDepositEscrow_legacy.sol
