@@ -46,5 +46,4 @@ contract DoubleDepositEscrow {
         require(seller.send(depositAmount), "Deposit refund to seller failed.");
         require(buyer.send(depositAmount - paymentAmount), "Residual deposit refund to buyer failed.");
     }
-    
 }

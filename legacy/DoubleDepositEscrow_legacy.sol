@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-// pragma solidity >=0.6.0 <0.8.0;
-pragma solidity ^0.8.18;
+pragma solidity >=0.6.0 <0.8.0;
+//pragma solidity ^0.8.18;
 contract DoubleDepositEscrow {
     address payable public buyer;
     address payable public seller;
@@ -59,5 +59,4 @@ contract DoubleDepositEscrow {
         (bool s3, ) = buyer.call{value: depositAmount - paymentAmount}("");
         require(s3, "Residual deposit refund to buyer failed.");        
     }
-    
 }
